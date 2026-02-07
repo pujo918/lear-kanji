@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kanji MVP</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="app-title">Kanji Learning MVP</h1>
+
+    <nav class="mode-nav" aria-label="Mode">
+      <button id="btnModeLearning" class="mode-btn" type="button">Pembelajaran</button>
+      <button id="btnModePractice" class="mode-btn" type="button">Latihan Menulis</button>
+      <button id="btnModeTest" class="mode-btn" type="button">Ujian Menulis</button>
+      <button id="btnModeFlashcard" class="mode-btn" type="button">Flashcard</button>
+      <button id="btnModeJukugoWrite" class="mode-btn" type="button">Jukugo Tulis</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="modeLearning" class="mode-section" aria-labelledby="learningTitle">
+      <h2 id="learningTitle">Pembelajaran</h2>
+      <div class="muted">Belajar kanji berdasarkan pertemuan</div>
+
+      <div class="panel">
+        <label class="field">
+          <span>Pilih pertemuan</span>
+          <select id="learningMeetingSelect" class="select"></select>
+        </label>
+
+        <div id="learningMeetingDescription" class="muted"></div>
+
+        <div id="learningKanjiList" class="learning-list" aria-label="Daftar kanji per pertemuan"></div>
+      </div>
+    </section>
+
+    <section id="modePractice" class="mode-section" aria-labelledby="practiceTitle">
+      <h2 id="practiceTitle">Latihan Menulis</h2>
+      <div class="muted">Latihan menulis kanji berdasarkan pertemuan</div>
+
+      <div class="panel">
+        <label class="field">
+          <span>Pilih pertemuan</span>
+          <select id="practiceMeetingSelect" class="select"></select>
+        </label>
+
+        <div class="practice-target" aria-label="Target kanji">
+          <div id="practiceTargetKanji" class="practice-target-kanji"></div>
+          <div id="practiceTargetOnyomi" class="muted"></div>
+          <div id="practiceTargetKunyomi" class="muted"></div>
+          <div id="practiceTargetMeaning" class="muted"></div>
+          <div id="practiceEmptyMsg" class="learning-empty hidden"></div>
+        </div>
+
+        <div class="canvas-wrap">
+          <div class="canvas-stack">
+            <canvas id="practiceCanvas" width="360" height="360" class="canvas" aria-label="Kanvas latihan"></canvas>
+            <div id="practiceGrid" class="grid-overlay" aria-hidden="true"></div>
+          </div>
+          <div id="practiceStrokeMsg" class="hint" aria-live="polite"></div>
+        </div>
+
+        <div class="actions">
+          <button id="btnPracticeNext" type="button">Kanji Selanjutnya</button>
+          <button id="btnPracticeClear" type="button">Hapus Coretan</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="modeTest" class="mode-section" aria-labelledby="testTitle">
+      <h2 id="testTitle">Mode Ujian Menulis</h2>
+
+      <div class="panel">
+        <div class="test-meta">
+          <div><strong>Furigana:</strong> <span id="testFurigana"></span></div>
+          <div><strong>Arti:</strong> <span id="testMeaning"></span></div>
+          <div class="muted">Tulis kanji di kanvas (karakter kanji tidak ditampilkan).</div>
+        </div>
+
+        <div class="canvas-wrap">
+          <div class="canvas-stack">
+            <canvas id="testCanvas" width="360" height="360" class="canvas" aria-label="Kanvas ujian"></canvas>
+            <div id="testGrid" class="grid-overlay hidden" aria-hidden="true"></div>
+          </div>
+          <div id="testStrokeMsg" class="hint" aria-live="polite"></div>
+        </div>
+
+        <div class="actions">
+          <button id="btnTestDone" type="button">Selesai</button>
+          <button id="btnTestNew" type="button">Ulang / Kanji Baru</button>
+          <button id="btnTestClear" type="button">Clear canvas</button>
+        </div>
+
+        <div id="testResult" class="result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="modeFlashcard" class="mode-section" aria-labelledby="flashcardTitle">
+      <h2 id="flashcardTitle">Flashcard</h2>
+      <div class="muted">Latih ingatan sebelum menulis</div>
+
+      <div class="panel flashcard-panel">
+        <div class="flashcard-toolbar" aria-label="Flashcard filters">
+          <label class="check">
+            <input id="flashcardFilterJukugo" type="checkbox" checked />
+            <span>Jukugo</span>
+          </label>
+          <label class="check">
+            <input id="flashcardFilterKanji" type="checkbox" checked />
+            <span>Kanji</span>
+          </label>
+        </div>
+
+        <div class="flashcard-stage" aria-label="Flashcard">
+          <button id="flashcardCard" class="flashcard-card" type="button" aria-label="Flip card">
+            <div id="flashcardInner" class="flashcard-inner">
+              <div class="flashcard-face flashcard-front">
+                <div id="flashcardFrontMain" class="flashcard-main"></div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div id="flashcardBackMain" class="flashcard-main"></div>
+                <div class="flashcard-back-meta">
+                  <div id="flashcardBackReading" class="flashcard-meta"></div>
+                  <div id="flashcardBackMeaning" class="flashcard-meta"></div>
+                </div>
+                <div class="flashcard-back-actions">
+                  <button id="btnFlashcardDetail" type="button">Detail</button>
+                </div>
+                <div id="flashcardBackDetails" class="flashcard-details"></div>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <div class="actions flashcard-actions" aria-label="Answer controls">
+          <button id="btnFlashcardBelumTahu" type="button">Belum Tahu</button>
+          <button id="btnFlashcardTahu" type="button">Tahu</button>
+        </div>
+
+        <div class="flashcard-hint muted">
+          Klik kartu / Space = flip.
+        </div>
+
+        <div id="flashcardCta" class="flashcard-cta hidden">
+          <button id="btnFlashcardWriteJukugo" type="button">➡️ Latihan Tulis Jukugo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="modeJukugoWrite" class="mode-section" aria-labelledby="jukugoWriteTitle">
+      <h2 id="jukugoWriteTitle">Mode Jukugo Tulis (Satu Kanvas)</h2>
+
+      <div class="panel">
+        <label class="field">
+          <span>Pilih jukugo</span>
+          <select id="jukugoWriteSelect" class="select"></select>
+        </label>
+
+        <label class="check">
+          <input id="jukugoWriteGuideToggle" type="checkbox" checked />
+          <span>Tampilkan panduan kotak</span>
+        </label>
+
+        <label class="check">
+          <input id="jukugoWriteInnerGridToggle" type="checkbox" />
+          <span>Tampilkan grid 3×3 di tiap kotak (opsional)</span>
+        </label>
+
+        <div class="muted" id="jukugoWriteHint"></div>
+
+        <div class="canvas-wrap">
+          <div class="canvas-stack wide">
+            <canvas id="jukugoWriteCanvas" height="360" class="canvas" aria-label="Kanvas jukugo lebar"></canvas>
+            <div id="jukugoWriteGuides" class="jukugo-guides" aria-hidden="true"></div>
+            <div id="jukugoWriteInnerGrid" class="jukugo-inner-grid hidden" aria-hidden="true"></div>
+            <div id="jukugoWriteHighlight" class="jukugo-highlight hidden" aria-hidden="true"></div>
+          </div>
+          <div id="jukugoWriteStrokeMsg" class="hint" aria-live="polite"></div>
+        </div>
+
+        <div class="actions">
+          <button id="btnJukugoWriteDone" type="button">Selesai</button>
+          <button id="btnJukugoWriteClear" type="button">Clear canvas</button>
+        </div>
+
+        <div id="jukugoWriteResult" class="result" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

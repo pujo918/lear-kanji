@@ -1,195 +1,498 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kanji MVP</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jukugo Master - Daftar & Flashcard Jukugo Lengkap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <h1 class="app-title">Kanji Learning MVP</h1>
 
-    <nav class="mode-nav" aria-label="Mode">
-      <button id="btnModeLearning" class="mode-btn" type="button">Pembelajaran</button>
-      <button id="btnModePractice" class="mode-btn" type="button">Latihan Menulis</button>
-      <button id="btnModeTest" class="mode-btn" type="button">Ujian Menulis</button>
-      <button id="btnModeFlashcard" class="mode-btn" type="button">Flashcard</button>
-      <button id="btnModeJukugoWrite" class="mode-btn" type="button">Jukugo Tulis</button>
-    </nav>
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" onclick="switchView('list')">
+        <div class="brand-icon">熟</div>
+        <div>
+          <span class="brand-title">Jukugo Master</span>
+          <span class="brand-sub">熟語マスター • Minggu 1 - 6</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" id="navTabs">
+        <button class="tab-btn active" onclick="switchView('list')">
+          <span class="tab-icon">📖</span>
+          <span>Daftar Jukugo</span>
+        </button>
+        <button class="tab-btn" onclick="switchView('flashcard')">
+          <span class="tab-icon">🎴</span>
+          <span>Flashcard</span>
+        </button>
+        <button class="tab-btn" onclick="switchView('quiz')">
+          <span class="tab-icon">🎯</span>
+          <span>Latsol Acak</span>
+        </button>
+        <button class="tab-btn" onclick="switchView('favorites')">
+          <span class="tab-icon">⭐</span>
+          <span>Favorit (<span id="favCountBadge">0</span>)</span>
+        </button>
+        <button class="tab-btn" onclick="switchView('info')">
+          <span class="tab-icon">ℹ️</span>
+          <span>Info & Statistik</span>
+        </button>
+      </nav>
+
+      <!-- Header Action Buttons -->
+      <div class="header-actions">
+        <button class="icon-btn" id="themeToggleBtn" title="Ganti Tema Terang/Gelap" onclick="toggleTheme()">
+          🌓
+        </button>
+      </div>
+    </div>
   </header>
 
-  <main class="container">
-    <section id="modeLearning" class="mode-section" aria-labelledby="learningTitle">
-      <h2 id="learningTitle">Pembelajaran</h2>
-      <div class="muted">Belajar kanji berdasarkan pertemuan</div>
+  <!-- Main Content Area -->
+  <main class="main-content">
 
-      <div class="panel">
-        <label class="field">
-          <span>Pilih pertemuan</span>
-          <select id="learningMeetingSelect" class="select"></select>
-        </label>
-
-        <div id="learningMeetingDescription" class="muted"></div>
-
-        <div id="learningKanjiList" class="learning-list" aria-label="Daftar kanji per pertemuan"></div>
-      </div>
-    </section>
-
-    <section id="modePractice" class="mode-section" aria-labelledby="practiceTitle">
-      <h2 id="practiceTitle">Latihan Menulis</h2>
-      <div class="muted">Latihan menulis kanji berdasarkan pertemuan</div>
-
-      <div class="panel">
-        <label class="field">
-          <span>Pilih pertemuan</span>
-          <select id="practiceMeetingSelect" class="select"></select>
-        </label>
-
-        <div class="practice-target" aria-label="Target kanji">
-          <div id="practiceTargetKanji" class="practice-target-kanji"></div>
-          <div id="practiceTargetOnyomi" class="muted"></div>
-          <div id="practiceTargetKunyomi" class="muted"></div>
-          <div id="practiceTargetMeaning" class="muted"></div>
-          <div id="practiceEmptyMsg" class="learning-empty hidden"></div>
-        </div>
-
-        <div class="canvas-wrap">
-          <div class="canvas-stack">
-            <canvas id="practiceCanvas" width="360" height="360" class="canvas" aria-label="Kanvas latihan"></canvas>
-            <div id="practiceGrid" class="grid-overlay" aria-hidden="true"></div>
-          </div>
-          <div id="practiceStrokeMsg" class="hint" aria-live="polite"></div>
-        </div>
-
-        <div class="actions">
-          <button id="btnPracticeNext" type="button">Kanji Selanjutnya</button>
-          <button id="btnPracticeClear" type="button">Hapus Coretan</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="modeTest" class="mode-section" aria-labelledby="testTitle">
-      <h2 id="testTitle">Mode Ujian Menulis</h2>
-
-      <div class="panel">
-        <div class="test-meta">
-          <div><strong>Furigana:</strong> <span id="testFurigana"></span></div>
-          <div><strong>Arti:</strong> <span id="testMeaning"></span></div>
-          <div class="muted">Tulis kanji di kanvas (karakter kanji tidak ditampilkan).</div>
-        </div>
-
-        <div class="canvas-wrap">
-          <div class="canvas-stack">
-            <canvas id="testCanvas" width="360" height="360" class="canvas" aria-label="Kanvas ujian"></canvas>
-            <div id="testGrid" class="grid-overlay hidden" aria-hidden="true"></div>
-          </div>
-          <div id="testStrokeMsg" class="hint" aria-live="polite"></div>
-        </div>
-
-        <div class="actions">
-          <button id="btnTestDone" type="button">Selesai</button>
-          <button id="btnTestNew" type="button">Ulang / Kanji Baru</button>
-          <button id="btnTestClear" type="button">Clear canvas</button>
-        </div>
-
-        <div id="testResult" class="result" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section id="modeFlashcard" class="mode-section" aria-labelledby="flashcardTitle">
-      <h2 id="flashcardTitle">Flashcard</h2>
-      <div class="muted">Latih ingatan sebelum menulis</div>
-
-      <div class="panel flashcard-panel">
-        <div class="flashcard-toolbar" aria-label="Flashcard filters">
-          <label class="check">
-            <input id="flashcardFilterJukugo" type="checkbox" checked />
-            <span>Jukugo</span>
-          </label>
-          <label class="check">
-            <input id="flashcardFilterKanji" type="checkbox" checked />
-            <span>Kanji</span>
-          </label>
-        </div>
-
-        <div class="flashcard-stage" aria-label="Flashcard">
-          <button id="flashcardCard" class="flashcard-card" type="button" aria-label="Flip card">
-            <div id="flashcardInner" class="flashcard-inner">
-              <div class="flashcard-face flashcard-front">
-                <div id="flashcardFrontMain" class="flashcard-main"></div>
-              </div>
-              <div class="flashcard-face flashcard-back">
-                <div id="flashcardBackMain" class="flashcard-main"></div>
-                <div class="flashcard-back-meta">
-                  <div id="flashcardBackReading" class="flashcard-meta"></div>
-                  <div id="flashcardBackMeaning" class="flashcard-meta"></div>
-                </div>
-                <div class="flashcard-back-actions">
-                  <button id="btnFlashcardDetail" type="button">Detail</button>
-                </div>
-                <div id="flashcardBackDetails" class="flashcard-details"></div>
-              </div>
-            </div>
+    <!-- ========================================================
+         VIEW 1: LIST JUKUGO
+         ======================================================== -->
+    <section id="view-list" class="view-section active">
+      <!-- Filter Bar Card -->
+      <div class="filter-card">
+        <!-- Week Selector Pills -->
+        <div class="week-selector" id="weekSelectorPills">
+          <button class="week-pill active" onclick="filterByWeek(0, this)">
+            Semua Minggu <span class="badge" id="pillCountAll">500</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(1, this)">
+            Minggu 1 <span class="badge" id="pillCountW1">22 Kanji</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(2, this)">
+            Minggu 2 <span class="badge" id="pillCountW2">28 Kanji</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(3, this)">
+            Minggu 3 <span class="badge" id="pillCountW3">28 Kanji</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(4, this)">
+            Minggu 4 <span class="badge" id="pillCountW4">15 Kanji</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(5, this)">
+            Minggu 5 <span class="badge" id="pillCountW5">33 Kanji</span>
+          </button>
+          <button class="week-pill" onclick="filterByWeek(6, this)">
+            Minggu 6 <span class="badge" id="pillCountW6">17 Kanji</span>
           </button>
         </div>
 
-        <div class="actions flashcard-actions" aria-label="Answer controls">
-          <button id="btnFlashcardBelumTahu" type="button">Belum Tahu</button>
-          <button id="btnFlashcardTahu" type="button">Tahu</button>
-        </div>
-
-        <div class="flashcard-hint muted">
-          Klik kartu / Space = flip.
-        </div>
-
-        <div id="flashcardCta" class="flashcard-cta hidden">
-          <button id="btnFlashcardWriteJukugo" type="button">➡️ Latihan Tulis Jukugo</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="modeJukugoWrite" class="mode-section" aria-labelledby="jukugoWriteTitle">
-      <h2 id="jukugoWriteTitle">Mode Jukugo Tulis (Satu Kanvas)</h2>
-
-      <div class="panel">
-        <label class="field">
-          <span>Pilih jukugo</span>
-          <select id="jukugoWriteSelect" class="select"></select>
-        </label>
-
-        <label class="check">
-          <input id="jukugoWriteGuideToggle" type="checkbox" checked />
-          <span>Tampilkan panduan kotak</span>
-        </label>
-
-        <label class="check">
-          <input id="jukugoWriteInnerGridToggle" type="checkbox" />
-          <span>Tampilkan grid 3×3 di tiap kotak (opsional)</span>
-        </label>
-
-        <div class="muted" id="jukugoWriteHint"></div>
-
-        <div class="canvas-wrap">
-          <div class="canvas-stack wide">
-            <canvas id="jukugoWriteCanvas" height="360" class="canvas" aria-label="Kanvas jukugo lebar"></canvas>
-            <div id="jukugoWriteGuides" class="jukugo-guides" aria-hidden="true"></div>
-            <div id="jukugoWriteInnerGrid" class="jukugo-inner-grid hidden" aria-hidden="true"></div>
-            <div id="jukugoWriteHighlight" class="jukugo-highlight hidden" aria-hidden="true"></div>
+        <!-- Search & Control Toggles -->
+        <div class="search-and-toggles">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Cari kanji, furigana, romaji, atau arti bahasa Indonesia..." oninput="handleSearch()">
+            <button class="clear-btn" id="searchClearBtn" onclick="clearSearch()">✕</button>
           </div>
-          <div id="jukugoWriteStrokeMsg" class="hint" aria-live="polite"></div>
+
+          <div class="filter-actions">
+            <!-- Toggle Furigana -->
+            <button class="toggle-btn" id="toggleFuriganaBtn" onclick="toggleGlobalFurigana()">
+              <span id="furiganaIcon">👁️</span>
+              <span id="furiganaLabel">Furigana: Tampil</span>
+            </button>
+
+            <!-- Level Filter Dropdown -->
+            <select class="custom-select" id="levelFilterSelect" style="width: auto; min-width: 130px;" onchange="applyFilters()">
+              <option value="all">Semua Level</option>
+              <option value="N1">Level N1</option>
+              <option value="N2">Level N2</option>
+              <option value="N3">Level N3</option>
+              <option value="N4">Level N4</option>
+              <option value="Umum">Level Umum</option>
+            </select>
+          </div>
         </div>
 
-        <div class="actions">
-          <button id="btnJukugoWriteDone" type="button">Selesai</button>
-          <button id="btnJukugoWriteClear" type="button">Clear canvas</button>
+        <!-- Horizontal Kanji Quick Ribbon -->
+        <div class="kanji-ribbon" id="kanjiRibbon">
+          <!-- Dynamically populated chips -->
         </div>
+      </div>
 
-        <div id="jukugoWriteResult" class="result" aria-live="polite"></div>
+      <!-- Stats summary info -->
+      <div class="stats-bar">
+        <span id="resultsCount">Menampilkan 500 jukugo</span>
+        <span id="activeFilterDesc">Semua Minggu</span>
+      </div>
+
+      <!-- Jukugo Cards Grid -->
+      <div class="jukugo-grid" id="jukugoGrid">
+        <!-- Rendered cards via JavaScript -->
       </div>
     </section>
+
+    <!-- ========================================================
+         VIEW 2: FLASHCARD (Front-Only, No Flip Needed)
+         ======================================================== -->
+    <section id="view-flashcard" class="view-section">
+      <div class="flashcard-wrapper">
+        
+        <!-- Flashcard Header Controls -->
+        <div class="flashcard-header-controls">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <select class="custom-select" id="flashcardWeekSelect" style="width: auto;" onchange="changeFlashcardScope()">
+              <option value="0">Semua Minggu (Semua Jukugo)</option>
+              <option value="1">Minggu 1 Saja</option>
+              <option value="2">Minggu 2 Saja</option>
+              <option value="3">Minggu 3 Saja</option>
+              <option value="4">Minggu 4 Saja</option>
+              <option value="5">Minggu 5 Saja</option>
+              <option value="6">Minggu 6 Saja</option>
+              <option value="fav">Hanya Favorit ⭐</option>
+            </select>
+
+            <span class="flashcard-counter-badge" id="flashcardCounter">1 / 500</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <button class="subcontrol-btn" id="flashcardShuffleBtn" onclick="toggleFlashcardShuffle()" title="Acak urutan flashcard">
+              🔀 <span>Acak</span>
+            </button>
+            <button class="subcontrol-btn" id="flashcardAutoPlayBtn" onclick="toggleFlashcardAutoPlay()" title="Otomatis maju ke kartu berikutnya">
+              ▶️ <span>Auto (3s)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="flashcard-progress-bar-container">
+          <div class="flashcard-progress-bar-fill" id="flashcardProgressBar" style="width: 0%;"></div>
+        </div>
+
+        <!-- The Front-Only Flashcard Card -->
+        <div class="flashcard-card" id="flashcardCard">
+          <!-- Top Meta -->
+          <div class="flashcard-top-meta">
+            <div class="card-badges">
+              <span class="badge-week" id="fcWeekBadge">Minggu 1</span>
+              <span class="badge-level" id="fcLevelBadge">N2</span>
+              <span class="badge-kanji-root" id="fcRootBadge">Kanji Asal: 株</span>
+            </div>
+            <div class="card-tools">
+              <button class="card-btn" id="fcSpeakBtn" title="Dengarkan Pengucapan Jepang" onclick="speakCurrentFlashcard()">
+                🔊
+              </button>
+              <button class="card-btn" id="fcFavBtn" title="Beri Bintang / Simpan ke Favorit" onclick="toggleCurrentFlashcardFav()">
+                ☆
+              </button>
+            </div>
+          </div>
+
+          <!-- Center Content: Kanji, Furigana, Romaji, and Indonesian Meaning right here! -->
+          <div class="flashcard-center-content">
+            <div class="flashcard-kanji" id="fcKanji">
+              <!-- e.g. <ruby>株<rt>かぶ</rt>式<rt>しき</rt></ruby> -->
+            </div>
+            <div class="flashcard-romaji" id="fcRomaji">kabushiki</div>
+
+            <!-- Meaning in Indonesian (Direct Front View as requested) -->
+            <div class="flashcard-meaning-badge">
+              <div class="flashcard-meaning-text" id="fcMeaning">Saham / efek kepemilikan saham</div>
+            </div>
+          </div>
+
+          <!-- Example Sentence -->
+          <div class="flashcard-example">
+            <div class="ex-jp" id="fcExampleJp">彼は株式会社を立ち上げた。</div>
+            <div class="ex-id" id="fcExampleId">Dia mendirikan perseroan terbatas (PT).</div>
+          </div>
+        </div>
+
+        <!-- Big Navigation Buttons (Next / Prev) -->
+        <div class="flashcard-actions">
+          <button class="btn-nav" id="fcPrevBtn" onclick="prevFlashcard()">
+            ⬅ Sebelumnya
+          </button>
+          <button class="btn-nav btn-primary" id="fcNextBtn" onclick="nextFlashcard()">
+            Berikutnya ➔
+          </button>
+        </div>
+
+        <!-- Subcontrols & Tips -->
+        <div class="flashcard-subcontrols">
+          <button class="subcontrol-btn" id="fcToggleFuriganaBtn" onclick="toggleFlashcardFurigana()">
+            👁️ Sembunyikan/Tampilkan Furigana
+          </button>
+          <button class="subcontrol-btn" onclick="resetFlashcardIndex()">
+            🔄 Ulangi Dari Awal
+          </button>
+        </div>
+
+        <div class="keyboard-hint">
+          <span>Tips navigasi: Tekan</span>
+          <span class="kbd">➔</span> atau <span class="kbd">Spasi</span> untuk Berikutnya,
+          <span class="kbd">⬅</span> untuk Sebelumnya
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VIEW 3: LATIHAN SOAL ACAK (QUIZ / LATSOL)
+         ======================================================== -->
+    <section id="view-quiz" class="view-section">
+      <div class="quiz-container">
+        
+        <!-- Quiz Setup Screen -->
+        <div class="quiz-setup-card" id="quizSetupCard">
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎯</div>
+          <h2 class="quiz-title">Latihan Soal Acak Jukugo</h2>
+          <p class="quiz-desc">Uji kemampuan ingatan cara baca furigana dan arti kata jukugo dengan soal acak interaktif.</p>
+
+          <div class="quiz-settings-grid">
+            <div class="setting-group">
+              <label for="quizModeSelect">Pilih Tipe Soal:</label>
+              <select class="custom-select" id="quizModeSelect">
+                <option value="reading">1. Tebak Furigana / Cara Baca (Hiragana)</option>
+                <option value="meaning">2. Tebak Arti Bahasa Indonesia</option>
+                <option value="kanji">3. Tebak Jukugo Kanji dari Arti</option>
+                <option value="mixed">4. Campuran Acak (Semua Tipe Soal)</option>
+              </select>
+            </div>
+
+            <div class="setting-group">
+              <label for="quizWeekSelect">Pilih Cakupan Materi:</label>
+              <select class="custom-select" id="quizWeekSelect">
+                <option value="0">Semua Minggu (Minggu 1 - 6)</option>
+                <option value="1">Minggu 1 Saja (22 Kanji)</option>
+                <option value="2">Minggu 2 Saja (28 Kanji)</option>
+                <option value="3">Minggu 3 Saja (28 Kanji)</option>
+                <option value="4">Minggu 4 Saja (15 Kanji)</option>
+                <option value="5">Minggu 5 Saja (33 Kanji)</option>
+                <option value="6">Minggu 6 Saja (17 Kanji)</option>
+                <option value="fav">Hanya Soal Dari Favorit ⭐</option>
+              </select>
+            </div>
+
+            <div class="setting-group">
+              <label for="quizCountSelect">Jumlah Soal:</label>
+              <select class="custom-select" id="quizCountSelect">
+                <option value="10">10 Soal (Latihan Cepat)</option>
+                <option value="20" selected>20 Soal (Rekomendasi Standar)</option>
+                <option value="30">30 Soal (Ujian Mantap)</option>
+                <option value="50">50 Soal (Maraton Belajar)</option>
+              </select>
+            </div>
+
+            <div class="setting-group">
+              <label for="quizSoundToggle">Efek Suara Audio:</label>
+              <select class="custom-select" id="quizSoundToggle">
+                <option value="on">Aktif (Suara Benar & Salah 🔔)</option>
+                <option value="off">Mati (Hening 🔇)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-start-quiz" onclick="startQuiz()">
+            <span>Mulai Latsol Sekarang</span>
+            <span>➔</span>
+          </button>
+        </div>
+
+        <!-- Live Question Screen -->
+        <div class="quiz-active-view" id="quizActiveView">
+          <div class="quiz-status-header">
+            <span class="quiz-score-badge" id="quizProgressBadge">Soal 1 / 20</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <span class="quiz-streak-badge" id="quizStreakBadge">🔥 Streak 0</span>
+              <span class="quiz-score-badge" id="quizScoreBadge">Skor: 0</span>
+            </div>
+          </div>
+
+          <!-- Question Progress Bar -->
+          <div class="flashcard-progress-bar-container" style="margin-bottom: 1.25rem;">
+            <div class="flashcard-progress-bar-fill" id="quizProgressBar" style="width: 5%;"></div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="question-card">
+            <span class="question-type-badge" id="quizTypeBadge">TEBAK FURIGANA</span>
+            <div class="question-prompt" id="quizQuestionPrompt">株式</div>
+            <div class="question-hint" id="quizQuestionHint">Pilihlah cara baca (furigana) yang tepat:</div>
+
+            <!-- Options Grid -->
+            <div class="options-grid" id="quizOptionsGrid">
+              <!-- Rendered option buttons -->
+            </div>
+
+            <!-- Explanation Card (Shown after answering) -->
+            <div class="explanation-card" id="quizExplanationCard">
+              <!-- Explanation details -->
+            </div>
+
+            <button class="btn-next-question" id="quizNextBtn" onclick="nextQuestion()">
+              <span>Lanjut ke Soal Berikutnya</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Results Screen -->
+        <div class="quiz-results-card" id="quizResultsCard">
+          <div class="results-grade-circle">
+            <span class="grade-letter" id="resGrade">A</span>
+            <span class="grade-percent" id="resPercent">90%</span>
+          </div>
+
+          <h2 class="results-title" id="resTitle">Luar Biasa! Kerja Bagus!</h2>
+          <p class="quiz-desc" id="resDesc">Kamu telah menyelesaikan latihan soal dengan sangat baik.</p>
+
+          <div class="results-summary-stats">
+            <div class="stat-item">
+              <div class="val" id="resCorrectCount">18</div>
+              <div class="lbl">Benar</div>
+            </div>
+            <div class="stat-item">
+              <div class="val" id="resWrongCount" style="color: #e11d48;">2</div>
+              <div class="lbl">Salah</div>
+            </div>
+            <div class="stat-item">
+              <div class="val" id="resMaxStreak" style="color: #d97706;">12</div>
+              <div class="lbl">Max Streak 🔥</div>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button class="btn-nav btn-primary" onclick="restartQuiz()">
+              🔄 Coba Kuis Lagi
+            </button>
+            <button class="btn-nav" id="btnReviewWrong" onclick="reviewWrongAnswersOnly()" style="display: none;">
+              📝 Latihan Soal Salah Saja
+            </button>
+            <button class="btn-nav" onclick="switchView('flashcard')">
+              🎴 Belajar di Flashcard
+            </button>
+          </div>
+
+          <!-- Wrong Answers Review Section -->
+          <div class="wrong-answers-section" id="wrongAnswersSection" style="display: none;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">
+              Pembahasan Soal yang Perlu Dipelajari Ulang:
+            </h3>
+            <div id="wrongAnswersList">
+              <!-- Rendered list -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VIEW 4: FAVORIT (BOOKMARKS)
+         ======================================================== -->
+    <section id="view-favorites" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);">Daftar Jukugo Favorit ⭐</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Koleksi jukugo yang kamu tandai dengan bintang untuk dipelajari lebih fokus.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn-nav btn-primary" onclick="studyFavoritesInFlashcard()">
+            🎴 Buka di Flashcard
+          </button>
+          <button class="btn-nav" onclick="clearAllFavorites()">
+            🗑️ Hapus Semua
+          </button>
+        </div>
+      </div>
+
+      <div class="jukugo-grid" id="favoritesGrid">
+        <!-- Rendered favorite cards -->
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VIEW 5: INFO & STATISTIK
+         ======================================================== -->
+    <section id="view-info" class="view-section">
+      <div style="max-width: 840px; margin: 0 auto;">
+        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main);">
+          Statistik & Panduan Belajar Jukugo
+        </h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.75rem;">
+          Ringkasan seluruh kanji dari Minggu 1 hingga Minggu 6 yang telah dipetakan ke jukugo berfrekuensi tinggi.
+        </p>
+
+        <!-- Weeks Summary Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 1</div>
+            <div class="val">22 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">78 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">株、随、勘、佃、熟、錯、誤、極、範、忍、看、蠅、葵、倫、敦、情、息、影、響、愉、快、素</div>
+          </div>
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 2</div>
+            <div class="val">28 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">97 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">促、編、娯、魅、視、争、層、刊、巨、競、浮、蓄、河、秘、歴、遭、幻、襲、粉、源、鉱、漠、徴、睡、嫌、署、悔、隠</div>
+          </div>
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 3</div>
+            <div class="val">28 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">93 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">褒、謙、遜、担、脇、脚、脈、偉、徐、弊、老、舗、絨、毯、拓、鼓、鬼、棋、寿、嬢、欧、揺、環、境、誉、徳、怠、駄</div>
+          </div>
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 4</div>
+            <div class="val">15 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">51 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">慰、漏、盗、厳、遺、振、励、折、鍵、骨、津、尋、燃、蔵、創</div>
+          </div>
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 5</div>
+            <div class="val">33 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">122 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">暦、陰、旧、睦、如、弥、旬、諸、閏、唐、施、惑、補、慮、幼、稚、混、冒、改、善、掘、跡、墓、頂、納、就、邪、魔、測、端、竜、滝、鯉</div>
+          </div>
+          <div class="stat-item" style="text-align: left;">
+            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 6</div>
+            <div class="val">17 Kanji</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">59 Jukugo Berfrekuensi Tinggi</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">鉛 (铅)、削、瓶、排、鋭 (锐)、属、錆 (锈)、捜 (搜)、跳、遺 (遗)、嫁、躍 (跃)、維 (维)、税、咳、潮、癖</div>
+          </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem;">
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary);">
+            💡 Tips Menguasai Jukugo Bahasa Jepang
+          </h3>
+          <ul style="padding-left: 1.25rem; line-height: 1.7; color: var(--text-main); font-size: 0.95rem;">
+            <li><strong>Pola Bunyi On-On:</strong> Sebagian besar jukugo 2 kanji dibaca menggunakan cara baca <em>Onyomi</em> (bunyi serapan Tiongkok), contohnya <code>株式 (かぶしき)</code>, <code>環境 (かんきょう)</code>.</li>
+            <li><strong>Perhatikan Pola Perubahan Bunyi (Rendaku & Sokuon):</strong> Huruf tsu kecil <code>っ</code> sering muncul ketika kanji berakhiran ku/chi bertemu konsonan k/s/t/p (contoh: <code>骨折 = こつ + せつ ➔ こっせつ</code>).</li>
+            <li><strong>Fitur Front-Only Flashcard:</strong> Gunakan flashcard tanpa perlu membalik kartu untuk mempercepat ritme membaca jukugo bersama artinya secara berulang.</li>
+            <li><strong>Uji Ingatan di Latsol Acak:</strong> Kerjakan 20 soal acak setiap hari untuk memperkuat daya ingat jangka panjang (spaced repetition).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script src="./script.js"></script>
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <p><strong>Jukugo Master (熟語マスター)</strong> — Platform Pembelajaran Kanji & Jukugo Bahasa Jepang Minggu 1 s/d 6.</p>
+    <p style="margin-top: 0.25rem; opacity: 0.8;">Total 143 Kanji • 500 Jukugo Berfrekuensi Tinggi • Dilengkapi Audio & Furigana.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initStorage();
   flattenDatabase();
   setupEventListeners();
-  updatePillCounts();
+  setupWeekSelectors();
+  renderWeeksSummaryGrid();
   applyFilters();
   initFlashcard();
 });
@@ -125,18 +126,92 @@ function setupEventListeners() {
   });
 }
 
-function updatePillCounts() {
-  const countAll = allJukugoList.length;
-  document.getElementById("pillCountAll").textContent = `${countAll} Jukugo`;
+function getAvailableWeeks() {
+  const weeks = Array.from(new Set(JUKUGO_DATABASE.map(k => k.week)));
+  return weeks.sort((a, b) => a - b);
+}
 
-  for (let w = 1; w <= 6; w++) {
-    const kanjisInWeek = JUKUGO_DATABASE.filter(k => k.week === w).length;
-    const jukugosInWeek = allJukugoList.filter(j => j.week === w).length;
-    const pillBadge = document.getElementById(`pillCountW${w}`);
-    if (pillBadge) {
-      pillBadge.textContent = `${kanjisInWeek} Kanji (${jukugosInWeek})`;
-    }
+function setupWeekSelectors() {
+  const weeks = getAvailableWeeks();
+  const countAll = allJukugoList.length;
+
+  // 1. Week Selector Pills in List View
+  const pillsContainer = document.getElementById("weekSelectorPills");
+  if (pillsContainer) {
+    pillsContainer.innerHTML = "";
+    
+    // Semua Minggu Pill
+    const allBtn = document.createElement("button");
+    allBtn.className = `week-pill ${currentWeekFilter === 0 ? 'active' : ''}`;
+    allBtn.innerHTML = `Semua Minggu <span class="badge" id="pillCountAll">${countAll} Jukugo</span>`;
+    allBtn.onclick = () => filterByWeek(0, allBtn);
+    pillsContainer.appendChild(allBtn);
+
+    // Individual Week Pills
+    weeks.forEach(w => {
+      const kanjisInW = JUKUGO_DATABASE.filter(k => k.week === w).length;
+      const jukugosInW = allJukugoList.filter(j => j.week === w).length;
+      
+      const btn = document.createElement("button");
+      btn.className = `week-pill ${currentWeekFilter === w ? 'active' : ''}`;
+      btn.innerHTML = `Minggu ${w} <span class="badge">${kanjisInW} Kanji (${jukugosInW})</span>`;
+      btn.onclick = () => filterByWeek(w, btn);
+      pillsContainer.appendChild(btn);
+    });
   }
+
+  // 2. Flashcard Dropdown
+  const fcSelect = document.getElementById("flashcardWeekSelect");
+  if (fcSelect) {
+    const currentVal = fcSelect.value || "0";
+    fcSelect.innerHTML = `<option value="0">Semua Minggu (${countAll} Jukugo)</option>`;
+    weeks.forEach(w => {
+      const kanjisInW = JUKUGO_DATABASE.filter(k => k.week === w).length;
+      const jukugosInW = allJukugoList.filter(j => j.week === w).length;
+      fcSelect.innerHTML += `<option value="${w}">Minggu ${w} Saja (${kanjisInW} Kanji - ${jukugosInW} Jukugo)</option>`;
+    });
+    fcSelect.innerHTML += `<option value="fav">Hanya Favorit ⭐</option>`;
+    fcSelect.value = currentVal;
+  }
+
+  // 3. Quiz Dropdown
+  const quizSelect = document.getElementById("quizWeekSelect");
+  if (quizSelect) {
+    const currentVal = quizSelect.value || "0";
+    quizSelect.innerHTML = `<option value="0">Semua Minggu (Semua ${weeks.length} Minggu)</option>`;
+    weeks.forEach(w => {
+      const kanjisInW = JUKUGO_DATABASE.filter(k => k.week === w).length;
+      quizSelect.innerHTML += `<option value="${w}">Minggu ${w} Saja (${kanjisInW} Kanji)</option>`;
+    });
+    quizSelect.innerHTML += `<option value="fav">Hanya Soal Dari Favorit ⭐</option>`;
+    quizSelect.value = currentVal;
+  }
+}
+
+function renderWeeksSummaryGrid() {
+  const container = document.getElementById("weeksSummaryGrid");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const weeks = getAvailableWeeks();
+  weeks.forEach(w => {
+    const kanjiObjs = JUKUGO_DATABASE.filter(k => k.week === w);
+    const jukugoCount = allJukugoList.filter(j => j.week === w).length;
+    const kanjiListStr = kanjiObjs.map(k => k.kanji).join("、");
+
+    const card = document.createElement("div");
+    card.className = "stat-item";
+    card.style.textAlign = "left";
+    card.innerHTML = `
+      <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU ${w}</div>
+      <div class="val">${kanjiObjs.length} Kanji</div>
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">${jukugoCount} Jukugo Berfrekuensi Tinggi</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp); word-break: break-all;">
+        ${kanjiListStr}
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }
 
 // ==========================================

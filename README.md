@@ -1,17 +1,17 @@
 # 熟語マスター (Jukugo Master) 🎌
 
-Aplikasi web interaktif untuk mempelajari kata majemuk kanji (**Jukugo / 熟語**) berdasarkan daftar kanji terorganisir per minggu (Minggu 1 s/d 6).
+Aplikasi web interaktif untuk mempelajari kata majemuk kanji (**Jukugo / 熟語**) berdasarkan daftar kanji terorganisir per minggu (Minggu 1 s/d 6 & Minggu 9 s/d 14).
 
 ---
 
 ## 🌟 Fitur Utama
 
 1. **Daftar Jukugo Lengkap (List View)**:
-   - Menampilkan total **143 Kanji** dan **500 Jukugo berfrekuensi tinggi** (setiap kanji memiliki minimal 2 hingga maksimal 4 jukugo).
+   - Menampilkan total **289 Kanji** dan **926 Jukugo berfrekuensi tinggi** (setiap kanji memiliki minimal 2 hingga maksimal 4 jukugo).
    - Dilengkapi **Furigana (Ruby)** di atas kanji yang bisa diatur: **Tampilkan Selalu** atau **Sembunyikan Furigana (Klik untuk Intip)** demi melatih daya ingat.
    - Arti lengkap dalam **Bahasa Indonesia** beserta romaji dan contoh kalimat kontekstual.
    - Tombol **Audio Pengucapan Bahasa Jepang** (Web Speech API native).
-   - Filter berdasarkan **Minggu (Minggu 1 - 6)**, Filter **Kanji Tertentu**, Level JLPT, serta kotak pencarian kata kunci.
+   - Filter dinamis berdasarkan **Minggu (Minggu 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14)**, Filter **Kanji Tertentu**, Level JLPT, serta kotak pencarian kata kunci.
 
 2. **🎴 Flashcard Mode (Front-Only / Tanpa Perlu Dibalik)**:
    - Sesuai dengan permintaan: kartu ditampilkan langsung satu sisi dengan kanji jukugo, furigana, dan arti bahasa Indonesia di bagian depan.

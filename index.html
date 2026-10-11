@@ -18,7 +18,7 @@
         <div class="brand-icon">熟</div>
         <div>
           <span class="brand-title">Jukugo Master</span>
-          <span class="brand-sub">熟語マスター • Minggu 1 - 6</span>
+          <span class="brand-sub">熟語マスター • Minggu 1 - 14</span>
         </div>
       </div>
 
@@ -66,27 +66,7 @@
       <div class="filter-card">
         <!-- Week Selector Pills -->
         <div class="week-selector" id="weekSelectorPills">
-          <button class="week-pill active" onclick="filterByWeek(0, this)">
-            Semua Minggu <span class="badge" id="pillCountAll">500</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(1, this)">
-            Minggu 1 <span class="badge" id="pillCountW1">22 Kanji</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(2, this)">
-            Minggu 2 <span class="badge" id="pillCountW2">28 Kanji</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(3, this)">
-            Minggu 3 <span class="badge" id="pillCountW3">28 Kanji</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(4, this)">
-            Minggu 4 <span class="badge" id="pillCountW4">15 Kanji</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(5, this)">
-            Minggu 5 <span class="badge" id="pillCountW5">33 Kanji</span>
-          </button>
-          <button class="week-pill" onclick="filterByWeek(6, this)">
-            Minggu 6 <span class="badge" id="pillCountW6">17 Kanji</span>
-          </button>
+          <!-- Populated dynamically via JavaScript -->
         </div>
 
         <!-- Search & Control Toggles -->
@@ -144,14 +124,7 @@
         <div class="flashcard-header-controls">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <select class="custom-select" id="flashcardWeekSelect" style="width: auto;" onchange="changeFlashcardScope()">
-              <option value="0">Semua Minggu (Semua Jukugo)</option>
-              <option value="1">Minggu 1 Saja</option>
-              <option value="2">Minggu 2 Saja</option>
-              <option value="3">Minggu 3 Saja</option>
-              <option value="4">Minggu 4 Saja</option>
-              <option value="5">Minggu 5 Saja</option>
-              <option value="6">Minggu 6 Saja</option>
-              <option value="fav">Hanya Favorit ⭐</option>
+              <!-- Populated dynamically via JavaScript -->
             </select>
 
             <span class="flashcard-counter-badge" id="flashcardCounter">1 / 500</span>
@@ -266,14 +239,7 @@
             <div class="setting-group">
               <label for="quizWeekSelect">Pilih Cakupan Materi:</label>
               <select class="custom-select" id="quizWeekSelect">
-                <option value="0">Semua Minggu (Minggu 1 - 6)</option>
-                <option value="1">Minggu 1 Saja (22 Kanji)</option>
-                <option value="2">Minggu 2 Saja (28 Kanji)</option>
-                <option value="3">Minggu 3 Saja (28 Kanji)</option>
-                <option value="4">Minggu 4 Saja (15 Kanji)</option>
-                <option value="5">Minggu 5 Saja (33 Kanji)</option>
-                <option value="6">Minggu 6 Saja (17 Kanji)</option>
-                <option value="fav">Hanya Soal Dari Favorit ⭐</option>
+                <!-- Populated dynamically via JavaScript -->
               </select>
             </div>
 
@@ -425,47 +391,12 @@
           Statistik & Panduan Belajar Jukugo
         </h2>
         <p style="color: var(--text-muted); margin-bottom: 1.75rem;">
-          Ringkasan seluruh kanji dari Minggu 1 hingga Minggu 6 yang telah dipetakan ke jukugo berfrekuensi tinggi.
+          Ringkasan seluruh kanji dari Minggu 1 hingga Minggu 14 yang telah dipetakan ke jukugo berfrekuensi tinggi.
         </p>
 
         <!-- Weeks Summary Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 1</div>
-            <div class="val">22 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">78 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">株、随、勘、佃、熟、錯、誤、極、範、忍、看、蠅、葵、倫、敦、情、息、影、響、愉、快、素</div>
-          </div>
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 2</div>
-            <div class="val">28 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">97 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">促、編、娯、魅、視、争、層、刊、巨、競、浮、蓄、河、秘、歴、遭、幻、襲、粉、源、鉱、漠、徴、睡、嫌、署、悔、隠</div>
-          </div>
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 3</div>
-            <div class="val">28 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">93 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">褒、謙、遜、担、脇、脚、脈、偉、徐、弊、老、舗、絨、毯、拓、鼓、鬼、棋、寿、嬢、欧、揺、環、境、誉、徳、怠、駄</div>
-          </div>
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 4</div>
-            <div class="val">15 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">51 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">慰、漏、盗、厳、遺、振、励、折、鍵、骨、津、尋、燃、蔵、創</div>
-          </div>
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 5</div>
-            <div class="val">33 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">122 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">暦、陰、旧、睦、如、弥、旬、諸、閏、唐、施、惑、補、慮、幼、稚、混、冒、改、善、掘、跡、墓、頂、納、就、邪、魔、測、端、竜、滝、鯉</div>
-          </div>
-          <div class="stat-item" style="text-align: left;">
-            <div class="lbl" style="font-weight: 700; color: var(--primary);">MINGGU 6</div>
-            <div class="val">17 Kanji</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">59 Jukugo Berfrekuensi Tinggi</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-serif-jp);">鉛 (铅)、削、瓶、排、鋭 (锐)、属、錆 (锈)、捜 (搜)、跳、遺 (遗)、嫁、躍 (跃)、維 (维)、税、咳、潮、癖</div>
-          </div>
+        <div id="weeksSummaryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <!-- Rendered dynamically via JavaScript -->
         </div>
 
         <!-- Tips Card -->
@@ -487,8 +418,8 @@
 
   <!-- Site Footer -->
   <footer class="site-footer">
-    <p><strong>Jukugo Master (熟語マスター)</strong> — Platform Pembelajaran Kanji & Jukugo Bahasa Jepang Minggu 1 s/d 6.</p>
-    <p style="margin-top: 0.25rem; opacity: 0.8;">Total 143 Kanji • 500 Jukugo Berfrekuensi Tinggi • Dilengkapi Audio & Furigana.</p>
+    <p><strong>Jukugo Master (熟語マスター)</strong> — Platform Pembelajaran Kanji & Jukugo Bahasa Jepang Minggu 1 s/d 14.</p>
+    <p style="margin-top: 0.25rem; opacity: 0.8;">Total 289 Kanji • 926 Jukugo Berfrekuensi Tinggi • Dilengkapi Audio & Furigana.</p>
   </footer>
 
   <!-- Scripts -->
